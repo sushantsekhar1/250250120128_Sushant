@@ -15,6 +15,7 @@ function App() {
     department_id: "",
   });
   const [editId, setEditId] = useState(null);
+  const [successMessage, setSuccessMessage] = useState(""); //  Success message state
 
   useEffect(() => {
     fetchEmployees();
@@ -44,19 +45,24 @@ function App() {
     try {
       if (editId === null) {
         await axios.post(`${API}/employees`, form);
+        setSuccessMessage(" Employee added successfully!");
       } else {
         await axios.put(`${API}/employees/${editId}`, form);
+        setSuccessMessage("Employee updated successfully!");
         setEditId(null);
       }
       setForm({ name: "", dob: "", phone: "", email: "", department_id: "" });
       fetchEmployees();
+
+      //  Clear success message after 3 seconds
+      setTimeout(() => setSuccessMessage(""), 3000);
     } catch (error) {
       console.error("Error submitting employee form:", error);
     }
   };
 
   const handleEdit = (emp) => {
-    const formattedDob = emp.dob.split('T')[0];
+    const formattedDob = emp.dob.split("T")[0];
     setForm({
       name: emp.name,
       dob: formattedDob,
@@ -89,7 +95,7 @@ function App() {
         <input
           className="form-control mb-2"
           placeholder="DOB"
-           type="date"
+          type="date"
           value={form.dob}
           onChange={(e) => setForm({ ...form, dob: e.target.value })}
         />
@@ -110,7 +116,9 @@ function App() {
         <select
           className="form-control mb-2"
           value={form.department_id}
-          onChange={(e) => setForm({ ...form, department_id: parseInt(e.target.value,10) })}
+          onChange={(e) =>
+            setForm({ ...form, department_id: parseInt(e.target.value, 10) })
+          }
         >
           <option value="">Select Department</option>
           {departments.map((d) => (
@@ -124,7 +132,14 @@ function App() {
         </button>
       </form>
 
-      <table className="table table-bordered">
+      {/* Success message alert */}
+      {successMessage && (
+        <div className="alert alert-success w-100 text-center" role="alert">
+          {successMessage}
+        </div>
+      )}
+
+      <table className="table table-bordered mt-3">
         <thead>
           <tr>
             <th>ID</th>
