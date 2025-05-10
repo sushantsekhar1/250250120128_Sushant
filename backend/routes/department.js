@@ -4,7 +4,7 @@ const db = require('../db');
 
 // Get all departments
 router.get('/', (_req, res) => {
-  db.query('SELECT * FROM department', (err, results) => {
+  db.query('SELECT * FROM departments', (err, results) => {
     if (err) return res.status(500).send(err);
     res.json(results);
   });
