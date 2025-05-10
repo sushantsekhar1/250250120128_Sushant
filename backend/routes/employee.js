@@ -7,7 +7,7 @@ router.get('/', (_req, res) => {
   const sql = `
     SELECT e.id, e.name, e.dob, e.phone, e.email, e.department_id, d.name AS department_name
     FROM employee e
-    JOIN department d ON e.department_id = d.id
+    JOIN departments d ON e.department_id = d.id
   `;
   db.query(sql, (err, results) => {
     if (err) return res.status(500).send(err);
